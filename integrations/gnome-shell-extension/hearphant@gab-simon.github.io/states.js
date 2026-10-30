@@ -220,15 +220,14 @@ function describeLive(laeq, uncertaintyDb = null) {
     if (laeq === null || !Number.isFinite(laeq))
         return null;
     const hours = hoursToReference(laeq);
-    let time;
-    if (hours >= 168)
-        time = 'Nesse nível, levaria mais de uma semana contínua para atingir a referência.';
-    else
-        time = `Nesse nível, a referência semanal seria atingida em ~${formatDuration(hours * 3600000)}.`;
+    const hint = hours >= 168
+        ? 'Nesse nível, a referência semanal levaria mais de uma semana.'
+        : `Nesse nível, a referência semanal chegaria em ~${formatDuration(hours * 3600000)}.`;
     return {
         label: formatDba(laeq),
         zone: laeq >= 90 ? 'very-high' : laeq >= 80 ? 'high' : 'ok',
-        hint: `${time} Atualiza a cada 3 s${uncertaintyDb ? `, ±${Math.round(uncertaintyDb)} dB` : ''}.`,
+        hint,
+        caption: uncertaintyDb ? `Agora no ouvido · ±${Math.round(uncertaintyDb)} dB` : 'Agora no ouvido',
     };
 }
 
@@ -290,14 +289,20 @@ const CALIBRATION_LABELS = {
     UNAVAILABLE: 'Sem monitoramento',
 };
 
+/* "faixa 2% a 21%" ou "faixa abaixo de 1%". */
+function _rangeText(s) {
+    if (s.doseLow === null)
+        return 'sem faixa';
+    if (s.doseHigh < 1)
+        return 'faixa abaixo de 1%';
+    return `faixa ${_formatPercent(s.doseLow)} a ${_formatPercent(s.doseHigh)}`;
+}
+
 function _doseChip(s, available, hasDose, estimated) {
     if (!available || s.mascotState === MascotState.ERROR)
         return null;
-    if (estimated && s.doseLow !== null) {
-        if (s.doseHigh < 1)
-            return 'Faixa provável: abaixo de 1%';
-        return `Faixa provável: ${_formatPercent(s.doseLow)} a ${_formatPercent(s.doseHigh)}`;
-    }
+    if (estimated)
+        return null; // a faixa já vai na legenda do número
     if (hasDose)
         return null;
     if (s.estimateAvailable && !s.signalAnalysis)
@@ -343,7 +348,9 @@ function describe(status) {
         headline = 'Serviço indisponível';
     } else if (hasDose) {
         hero = estimated ? `≈ ${_formatPercent(s.dosePercent)}` : _formatPercent(s.dosePercent);
-        heroCaption = estimated ? 'da referência semanal · estimativa' : 'da referência semanal';
+        heroCaption = estimated
+            ? `da referência semanal · estimativa, ${_rangeText(s)}`
+            : 'da referência semanal';
         headline = `${hero} da referência`;
     } else if (s.mascotState === MascotState.ERROR) {
         hero = '—';
@@ -430,6 +437,7 @@ function describe(status) {
         deviceIcon: DEVICE_ICONS[s.deviceKind],
         calibrated: hasDose && !estimated,
         estimated,
+        rangeText: estimated ? _rangeText(s) : null,
         calibrationLine: _calibrationLine(s),
         signal,
         protectionLabel: protection ? protection.label : null,
@@ -454,7 +462,7 @@ function describeWeek(status, today = new Date()) {
     const approximate = s.listeningMs !== null && s.signalListeningMs < s.listeningMs;
 
     // Média só sobre os dias efetivamente acompanhados: dia sem dados não é 0.
-    let observedDays = DAYS_SHOWN;
+    let observedDays = s.monitoringSince === null ? 0 : DAYS_SHOWN;
     if (s.monitoringSince !== null) {
         const start = new Date(s.monitoringSince);
         const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate());
@@ -479,17 +487,22 @@ function describeWeek(status, today = new Date()) {
         coverage = `Acompanhando desde ${_formatDateTime(s.monitoringSince)}. Períodos sem o serviço ficam sem dados; não contam como silêncio.`;
 
     return {
-        bars: daily.map((ms, i) => ({
-            ms,
-            label: labels[i],
-            valueLabel: formatDurationShort(ms),
-            isToday: i === DAYS_SHOWN - 1,
-            accessible: `${labels[i]}: ${formatDuration(ms)}`,
-        })),
+        bars: daily.map((ms, i) => {
+            // Dias antes do início do acompanhamento não têm dados.
+            const noData = DAYS_SHOWN - 1 - i >= observedDays && ms === 0;
+            return {
+                ms,
+                label: labels[i],
+                valueLabel: noData ? '' : formatDurationShort(ms),
+                isToday: i === DAYS_SHOWN - 1,
+                noData,
+                accessible: `${labels[i]}: ${noData ? 'sem dados' : formatDuration(ms)}`,
+            };
+        }),
         total: formatDuration(total),
         totalCaption: approximate ? 'nos últimos 7 dias · aproximado' : 'nos últimos 7 dias',
-        dailyAverage: formatDuration(total / observedDays),
-        dailyAverageCaption: observedDays < DAYS_SHOWN
+        dailyAverage: formatDuration(total / Math.max(observedDays, 1)),
+        dailyAverageCaption: observedDays > 0 && observedDays < DAYS_SHOWN
             ? `por dia (${observedDays} ${observedDays === 1 ? 'dia acompanhado' : 'dias acompanhados'})`
             : 'por dia',
         meanSignal: formatDbfs(s.signalMeanDbfs),

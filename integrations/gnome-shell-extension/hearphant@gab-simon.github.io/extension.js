@@ -74,10 +74,6 @@ function _row({ icon, title, subtitle = null, trailing = null, onClick = null, t
     return { actor, icon: iconActor, title: titleLabel, subtitle: subtitleLabel };
 }
 
-function _chevron() {
-    return new St.Icon({ icon_name: 'go-next-symbolic', icon_size: 14, style_class: 'hearphant-chevron' });
-}
-
 function _section(title, noteText = null) {
     const box = new St.BoxLayout({ vertical: true, style_class: 'hearphant-section', x_expand: true });
     box.add_child(_label(title, 'hearphant-section-title'));
@@ -267,16 +263,6 @@ class HearPhantIndicator extends PanelMenu.Button {
         this._signalCard = signalCard;
         page.add_child(signalCard);
 
-        this._protectionRow = _row({
-            icon: 'security-medium-symbolic',
-            title: 'Proteção',
-            subtitle: '',
-            trailing: _chevron(),
-            onClick: () => this._showPage('settings'),
-        });
-        this._protectionRow.actor.add_style_class_name('hearphant-card');
-        page.add_child(this._protectionRow.actor);
-
         const details = new St.Button({
             style_class: 'hearphant-primary-button',
             can_focus: true,
@@ -286,9 +272,6 @@ class HearPhantIndicator extends PanelMenu.Button {
         details.connect('clicked', () => this._showPage('week'));
         this._detailsButton = details;
         page.add_child(details);
-
-        this._footer = _label('', 'hearphant-footnote', { x_align: Clutter.ActorAlign.CENTER });
-        page.add_child(this._footer);
         return page;
     }
 
@@ -362,7 +345,9 @@ class HearPhantIndicator extends PanelMenu.Button {
             general.card.add_child(r.actor);
         body.add_child(general.box);
 
-        const protection = _section('Proteção');
+        const protection = _section('Proteção',
+            'A redução automática de volume ainda não foi implementada: hoje todos os modos ' +
+            'avisam quando o volume passa do ponto, sem mexer no volume.');
         this._modeRows = new Map();
         for (const mode of States.ProtectionModes) {
             const check = new St.Icon({ icon_name: 'object-select-symbolic', icon_size: 16, style_class: 'hearphant-check' });
@@ -489,21 +474,17 @@ class HearPhantIndicator extends PanelMenu.Button {
         }
         this._liveEstimate = view.signal.state === 'live' && status.estimateAvailable;
         this._estimateUncertaintyDb = status.estimateUncertaintyDb;
-        this._signalCaption.text = this._liveEstimate ? 'Agora no ouvido (estimativa)' : 'Sinal agora';
+        this._signalCaption.text = this._liveEstimate
+            ? `Agora no ouvido · ±${Math.round(status.estimateUncertaintyDb ?? 0)} dB`
+            : 'Sinal agora';
         this._meter.setScale(this._liveEstimate ? States.LIVE_SCALE : null);
         this._meterScale.visible = this._liveEstimate;
-        this._protectionRow.actor.visible = connected;
-        this._protectionRow.title.text = view.protectionLabel ? `Proteção: ${view.protectionLabel}` : 'Proteção';
-        this._protectionRow.subtitle.text = view.calibrated
-            ? 'Alertas e redução de volume'
-            : 'Sem calibração, a Ellie só informa';
-        _setLine(this._footer, view.coverageLine);
 
         // Semana.
         this._doseTile.actor.visible = view.estimated || view.calibrated;
         this._doseTile.value.text = `${view.hero} da referência`;
         this._doseTile.note.text = view.estimated
-            ? `${view.doseChip}. Estimativa automática, não é medição.`
+            ? `Estimativa automática, não é medição (${view.rangeText}).`
             : view.sourceLine;
         this._chart.setBars(week.bars);
         this._totalTile.value.text = week.total;
@@ -610,8 +591,7 @@ class HearPhantIndicator extends PanelMenu.Button {
                 this._meter.setLevel(live ? level.laeqEstimate : null);
                 this._setMeterZone(live?.zone ?? null);
                 this._signalValue.text = live ? live.label : 'Silêncio';
-                const dbfs = level.audible ? `Sinal ${States.formatDbfs(level.rmsDbfs)}. ` : '';
-                this._signalHint.text = live ? `${dbfs}${live.hint}` : 'Sem som saindo agora.';
+                this._signalHint.text = live ? live.hint : 'Sem som saindo agora.';
             } else if (level.capturing) {
                 this._meter.setLevel(level.rmsDbfs, level.peakDbfs);
                 this._setMeterZone(null);

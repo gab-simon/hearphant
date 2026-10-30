@@ -76,8 +76,9 @@ test('estimativa mostra faixa e incerteza; calibrado não', () => {
     const [s, v] = view(est);
     eq(v.sourceLine, 'Últimos 7 dias · Estimativa automática (±5 dB)');
     eq(v.hero, '≈ 55%');
-    eq(v.heroCaption, 'da referência semanal · estimativa');
-    eq(v.doseChip, 'Faixa provável: 17% a 174%');
+    eq(v.heroCaption, 'da referência semanal · estimativa, faixa 17% a 174%');
+    eq(v.doseChip, null, 'a faixa vai na legenda, sem chip separado:');
+    eq(v.rangeText, 'faixa 17% a 174%');
     eq(v.estimated, true);
     eq(v.calibrated, false);
     eq(s.doseLow, 17.4);
@@ -96,7 +97,7 @@ test('estimativa sem faixa não vira número', () => {
 test('dose estimada menor que 1% não aparece como 0%', () => {
     const [, v] = view({ measurement_status: 'ESTIMATED', mascot_state: 'NORMAL', dose_percent: 0.3, dose_low_percent: 0.1, dose_high_percent: 0.9, dose_uncertainty_db: 5 });
     eq(v.hero, '≈ < 1%');
-    eq(v.doseChip, 'Faixa provável: abaixo de 1%');
+    eq(v.heroCaption, 'da referência semanal · estimativa, faixa abaixo de 1%');
 });
 
 test('chip pede a análise do sinal quando há perfil', () => {
@@ -213,6 +214,8 @@ test('semana: média só sobre dias acompanhados', () => {
     eq(w.dailyAverageCaption, 'por dia (2 dias acompanhados)');
     eq(w.bars.length, 7);
     eq(w.bars[6].isToday, true);
+    eq(w.bars.map(b => b.noData).join(), 'true,true,true,true,true,false,false', 'dias sem dados:');
+    eq(w.bars[0].accessible, 'Sex: sem dados');
     eq(w.devices.length, 2, 'dispositivo sem áudio é omitido:');
     eq(w.devices[0].percentLabel, '75%');
     eq(w.devices[1].icon, 'audio-speakers-symbolic');
@@ -222,7 +225,8 @@ test('semana: dados diários inválidos não quebram', () => {
     const s = States.normalizeStatus({ measurement_status: 'UNVERIFIED', mascot_state: 'IDLE', daily_listening_ms: [1, 2] });
     eq(s.dailyListeningMs, null);
     const w = States.describeWeek(s, new Date(2026, 9, 29));
-    eq(w.bars.every(b => b.ms === 0), true, 'barras zeradas:');
+    eq(w.bars.every(b => b.ms === 0 && b.noData), true, 'sem histórico, tudo sem dados:');
+    eq(w.dailyAverageCaption, 'por dia');
     eq(w.coverage.startsWith('Ainda não há histórico'), true, 'cobertura:');
 });
 
@@ -240,10 +244,11 @@ test('nível ao vivo: zona e tempo até a referência', () => {
     const loud = States.describeLive(90, 5);
     eq(loud.label, '≈ 90 dB(A)');
     eq(loud.zone, 'very-high');
-    eq(loud.hint, 'Nesse nível, a referência semanal seria atingida em ~4 h. Atualiza a cada 3 s, ±5 dB.');
+    eq(loud.hint, 'Nesse nível, a referência semanal chegaria em ~4 h.');
+    eq(loud.caption, 'Agora no ouvido · ±5 dB');
     eq(States.describeLive(85).zone, 'high');
     eq(States.describeLive(60).zone, 'ok');
-    eq(States.describeLive(60).hint.startsWith('Nesse nível, levaria mais de uma semana'), true, 'hint 60:');
+    eq(States.describeLive(60).hint, 'Nesse nível, a referência semanal levaria mais de uma semana.');
     eq(States.describeLive(null), null);
 });
 

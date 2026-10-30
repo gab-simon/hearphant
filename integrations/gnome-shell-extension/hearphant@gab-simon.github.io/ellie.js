@@ -210,8 +210,20 @@ class WeekChart extends St.BoxLayout {
         cr.fill();
 
         this._bars.forEach((bar, i) => {
-            const h = bar.ms > 0 ? Math.max(4, (height - 4) * bar.ms / max) : 2;
             const x = slot * i + (slot - barWidth) / 2;
+            if (bar.noData) {
+                // Sem dados ≠ zero: contorno tracejado, sem preenchimento.
+                const h = Math.min(18, height - 2);
+                cr.save();
+                cr.setSourceRGBA(r, g, b, 0.35);
+                cr.setLineWidth(1);
+                cr.setDash([3, 3], 0);
+                cr.rectangle(x + 0.5, height - h + 0.5, barWidth - 1, h - 1);
+                cr.stroke();
+                cr.restore();
+                return;
+            }
+            const h = bar.ms > 0 ? Math.max(4, (height - 4) * bar.ms / max) : 2;
             const y = height - h;
             const radius = Math.min(barWidth / 2, 6, h / 2);
             cr.setSourceRGBA(r, g, b, bar.isToday ? 1 : 0.45);

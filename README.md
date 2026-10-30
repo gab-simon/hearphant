@@ -19,10 +19,30 @@ Tudo roda no seu computador: nenhum áudio é gravado ou enviado. Como o computa
 medir o som dentro do ouvido, os números são **estimativas**, sempre mostradas com uma faixa
 de incerteza. A ideia é ajudar a criar o hábito de baixar o volume, não dar um diagnóstico.
 
-![Mockup de referência da interface da Ellie](docs/mockup-ellie-dashboard.png)
+## Como fica
 
-*Mockup de referência (feito com o nome provisório anterior, SafeListen). A extensão segue o
-layout, mas exibe estimativas rotuladas no lugar de afirmações como "nível seguro".*
+Capturas da extensão rodando com o serviço real (fone Moondrop Chu II DSP, primeira hora de uso).
+
+<p>
+  <img src="docs/screenshots/principal.png" width="300" alt="Tela principal: Ellie no anel, ≈ 7% da referência semanal com faixa de 2% a 21%, volume 22%, dispositivo Chu2 DSP e medidor do nível no ouvido">
+  <img src="docs/screenshots/semana.png" width="300" alt="Escuta da semana: barras por dia (dias sem dados tracejados), exposição estimada, tempo com áudio, média diária, sinal médio e divisão por dispositivo">
+</p>
+
+**Tela principal:** quanto da referência semanal você já usou (com a faixa de incerteza), o
+volume, o fone detectado e o nível estimado no ouvido agora. **Semana:** tempo com áudio por dia;
+dias antes de a Ellie começar a acompanhar aparecem tracejados, porque falta de dados não é silêncio.
+
+<p>
+  <img src="docs/screenshots/volume-alto.png" width="300" alt="Volume alto: Ellie e medidor vermelhos em ≈ 91 dB(A), com a mensagem 'Volume muito alto agora! Que tal baixar um pouco?'">
+  <img src="docs/screenshots/configuracoes.png" width="300" alt="Configurações: análise do nível do sinal, notificações, animações e modos de proteção">
+</p>
+
+**Volume alto:** acima de 90 dB(A) por alguns segundos, a Ellie fica vermelha, balança no painel e
+avisa (esta captura usa o serviço simulado, por isso o selo "DEMONSTRAÇÃO"):
+
+<img src="docs/screenshots/notificacao.png" width="420" alt="Notificação: Volume muito alto, ≈ 94 dB(A)">
+
+**Configurações:** a análise do sinal é opcional e explica o ícone de gravação do GNOME.
 
 Especificação completa: [`SafeListen_Documentacao_Tecnica.md`](SafeListen_Documentacao_Tecnica.md) (escrita com o nome provisório anterior).
 
@@ -127,6 +147,13 @@ roda por vez: pare o daemon antes de usar o serviço simulado.
 - Saídas virtuais (EasyEffects etc.) não são resolvidas até o dispositivo físico.
 - Volume por aplicativo e ganhos fora do Linux (amplificador, controle no fone) não são vistos.
 - Testado só em Ubuntu 22.04, PipeWire 0.3.48, GNOME 42.9.
+
+## Design
+
+O layout seguiu este mockup de referência, feito com o nome provisório anterior (SafeListen).
+A extensão troca afirmações como "nível seguro" por estimativas rotuladas, com faixa.
+
+![Mockup de referência da interface da Ellie](docs/mockup-ellie-dashboard.png)
 
 ## Licença
 

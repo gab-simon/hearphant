@@ -51,19 +51,19 @@
 
 /* ---------- herói ---------- */
 
-.hearphant-ellie-ring { width: 176px; height: 176px; margin-top: 4px; }
+.hearphant-ellie-ring { width: 156px; height: 156px; margin-top: 2px; }
 .hearphant-ellie-halo {
-  width: 116px; height: 116px;
-  border-radius: 58px;
+  width: 104px; height: 104px;
+  border-radius: 52px;
   background-color: rgba(128, 128, 128, 0.08);
 }
-.hearphant-ellie-large { icon-size: 72px; }
+.hearphant-ellie-large { icon-size: 64px; }
 .hearphant-ellie-badge {
   font-weight: bold;
   font-size: 1em;
   padding: 1px 7px;
   border-radius: 99px;
-  margin: 22px 26px 0 0;
+  margin: 18px 22px 0 0;
   color: #ffffff;
   background-color: #8A8F98;
 }
@@ -116,7 +116,6 @@
 }
 .hearphant-row-title { font-weight: bold; }
 .hearphant-row-subtitle { font-size: 0.82em; color: #7d828a; }
-.hearphant-chevron { color: #7d828a; }
 .hearphant-check { color: #4C8BD6; }
 
 .hearphant-list { padding: 4px 6px; spacing: 2px; }
