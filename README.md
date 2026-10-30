@@ -2,10 +2,28 @@
 
 Acompanhamento de exposição sonora no Linux, com a Ellie como interface.
 
+## A ideia
+
+Ouvir som alto por muito tempo pode prejudicar a audição aos poucos, e o volume em
+porcentagem não diz quanto som chega de fato ao seu ouvido.
+
+O HearPhant fica de olho no áudio do computador e responde a duas perguntas:
+
+- **Quão alto está agora?** A Ellie, uma elefantinha no painel do GNOME, mostra uma estimativa
+  em dB(A) e fica vermelha, com um aviso, quando o volume passa do ponto.
+- **Quanto eu já ouvi nesta semana?** Ela soma o som ao longo de 7 dias e compara com o limite
+  recomendado pela OMS para adultos (80 dB(A) por 40 h na semana), mostrando quanto desse limite
+  você já usou.
+
+Tudo roda no seu computador: nenhum áudio é gravado ou enviado. Como o computador não tem como
+medir o som dentro do ouvido, os números são **estimativas**, sempre mostradas com uma faixa
+de incerteza. A ideia é ajudar a criar o hábito de baixar o volume, não dar um diagnóstico.
+
 ![Mockup de referência da interface da Ellie](docs/mockup-ellie-dashboard.png)
 
 *Mockup de referência (feito com o nome provisório anterior, SafeListen). A extensão segue o
 layout, mas exibe estimativas rotuladas no lugar de afirmações como "nível seguro".*
+
 Especificação completa: [`SafeListen_Documentacao_Tecnica.md`](SafeListen_Documentacao_Tecnica.md) (escrita com o nome provisório anterior).
 
 > Não é dispositivo médico. A dose exibida é uma **estimativa automática** com faixa de
