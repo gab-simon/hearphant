@@ -1,5 +1,5 @@
 #!/usr/bin/env gjs
-/* Serviço SIMULADO de org.hearphant.Service1 para desenvolver as interfaces
+/* Serviço SIMULADO de io.github.gab_simon.HearPhant1 para desenvolver as interfaces
  * sem o daemon real. Todos os dados são fictícios e marcados com is_demo=true.
  *
  * Uso: gjs tools/mock-hearphant-service.js [cenário]
@@ -10,8 +10,8 @@
 const { Gio, GLib } = imports.gi;
 const ByteArray = imports.byteArray;
 
-const BUS_NAME = 'org.hearphant.Service1';
-const OBJECT_PATH = '/org/hearphant/Service1';
+const BUS_NAME = 'io.github.gab_simon.HearPhant1';
+const OBJECT_PATH = '/io/github/gab_simon/HearPhant1';
 const CYCLE_SECONDS = 5;
 
 const scriptDir = Gio.File.new_for_path(imports.system.programPath).get_parent();

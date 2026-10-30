@@ -10,8 +10,8 @@ use anyhow::{bail, Result};
 use hearphant_dose::{time_to_reference_hours, ReferenceMode};
 use zbus::zvariant::OwnedValue;
 
-const BUS_NAME: &str = "org.hearphant.Service1";
-const OBJECT_PATH: &str = "/org/hearphant/Service1";
+const BUS_NAME: &str = "io.github.gab_simon.HearPhant1";
+const OBJECT_PATH: &str = "/io/github/gab_simon/HearPhant1";
 
 const NOT_DBA: &str = "volume é valor digital do mixer, não é dBA";
 

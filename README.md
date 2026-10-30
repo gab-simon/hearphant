@@ -1,6 +1,11 @@
 # HearPhant
 
 Acompanhamento de exposição sonora no Linux, com a Ellie como interface.
+
+![Mockup de referência da interface da Ellie](docs/mockup-ellie-dashboard.png)
+
+*Mockup de referência (feito com o nome provisório anterior, SafeListen). A extensão segue o
+layout, mas exibe estimativas rotuladas no lugar de afirmações como "nível seguro".*
 Especificação completa: [`SafeListen_Documentacao_Tecnica.md`](SafeListen_Documentacao_Tecnica.md) (escrita com o nome provisório anterior).
 
 > Não é dispositivo médico. A dose exibida é uma **estimativa automática** com faixa de
@@ -19,10 +24,10 @@ Especificação completa: [`SafeListen_Documentacao_Tecnica.md`](SafeListen_Docu
 | Descoberta e nível do sinal (PipeWire) | `crates/hearphant-audio` | Saída padrão, volume, mudo, tipo, streams (eventos via `pw-dump`); RMS/pico do monitor via `parec`, em memória |
 | Perfis de estimativa | `crates/hearphant-calibration` | Detecção automática do perfil; ver "Estimativa automática" abaixo |
 | Histórico local | `crates/hearphant-storage` | SQLite em `~/.local/share/hearphant/`; só agregados por minuto, nunca áudio |
-| Serviço D-Bus `org.hearphant.Service1` | `crates/hearphant-daemon` | Tempo de escuta em 7 dias, por dia e por dispositivo; tudo `UNVERIFIED` |
+| Serviço D-Bus `io.github.gab_simon.HearPhant1` | `crates/hearphant-daemon` | Tempo de escuta, dose estimada com faixa, alertas de dose e de volume alto |
 | CLI de diagnóstico | `crates/hearphant-cli` | `devices`, `status`, `reference` |
 | Extensão GNOME 42 | `integrations/gnome-shell-extension` | Popover com telas principal, semana e configurações |
-| Contrato D-Bus (v2) | `dbus/org.hearphant.Service1.xml` | Fonte única para daemon e extensão |
+| Contrato D-Bus (v3) | `dbus/io.github.gab_simon.HearPhant1.xml` | Fonte única para daemon e extensão |
 | Serviço simulado | `tools/mock-hearphant-service.js` | Dados fictícios para desenvolver a UI |
 
 **Análise do nível do sinal** é opcional (Configurações na Ellie). No GNOME 42, qualquer
@@ -78,7 +83,7 @@ install -Dm644 packaging/systemd/hearphant.service -t ~/.config/systemd/user
 systemctl --user daemon-reload && systemctl --user enable --now hearphant.service
 ```
 
-Logs: `journalctl --user -u hearphant -f`. Só um provedor de `org.hearphant.Service1`
+Logs: `journalctl --user -u hearphant -f`. Só um provedor de `io.github.gab_simon.HearPhant1`
 roda por vez: pare o daemon antes de usar o serviço simulado.
 
 ## Verificar a ausência de dosimetria falsa
@@ -104,3 +109,8 @@ roda por vez: pare o daemon antes de usar o serviço simulado.
 - Saídas virtuais (EasyEffects etc.) não são resolvidas até o dispositivo físico.
 - Volume por aplicativo e ganhos fora do Linux (amplificador, controle no fone) não são vistos.
 - Testado só em Ubuntu 22.04, PipeWire 0.3.48, GNOME 42.9.
+
+## Licença
+
+GPL-3.0-or-later. Veja [`LICENSE`](LICENSE). Vale para o código e para a arte da Ellie
+(`integrations/gnome-shell-extension/*/icons/`).

@@ -2,7 +2,7 @@
  * O GNOME 42 não tem a API de Quick Settings (43+), então a integração usa
  * um botão de painel com popover de três telas: principal, semana e
  * configurações. Toda a regra de negócio fica no serviço
- * (org.hearphant.Service1); aqui só há apresentação. */
+ * (io.github.gab_simon.HearPhant1); aqui só há apresentação. */
 'use strict';
 
 const { Clutter, GLib, GObject, Graphene, Pango, St } = imports.gi;

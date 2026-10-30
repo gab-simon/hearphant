@@ -1,6 +1,6 @@
-UUID      := hearphant@hearphant.org
+UUID      := hearphant@gab-simon.github.io
 SRC       := $(UUID)
-DBUS_XML  := ../../dbus/org.hearphant.Service1.xml
+DBUS_XML  := ../../dbus/io.github.gab_simon.HearPhant1.xml
 BUILD     := build
 
 .PHONY: pack install uninstall test clean

@@ -1,6 +1,6 @@
 [package]
 name = "hearphant-daemon"
-description = "Serviço de sessão org.hearphant.Service1"
+description = "Serviço de sessão io.github.gab_simon.HearPhant1"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

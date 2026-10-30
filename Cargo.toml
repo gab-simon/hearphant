@@ -5,7 +5,7 @@ members = ["crates/*"]
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-license = "UNLICENSED" # Definir após revisão de licenças (seção 17.2)
+license = "GPL-3.0-or-later"
 publish = false
 
 [workspace.dependencies]

@@ -2,8 +2,8 @@
  "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <!--
   Contrato D-Bus do HearPhant (seção 11.3 da especificação).
-  Nome no barramento de sessão: org.hearphant.Service1
-  Caminho do objeto:            /org/hearphant/Service1
+  Nome no barramento de sessão: io.github.gab_simon.HearPhant1
+  Caminho do objeto:            /io/github/gab_simon/HearPhant1
   Versão: 3
 
   Status (a{sv}) — chaves:
@@ -60,7 +60,7 @@
     verified b (o ganho foi lido de volta e confere), message s
 -->
 <node>
-  <interface name="org.hearphant.Service1">
+  <interface name="io.github.gab_simon.HearPhant1">
     <property name="ApiVersion" type="u" access="read"/>
 
     <method name="GetStatus">

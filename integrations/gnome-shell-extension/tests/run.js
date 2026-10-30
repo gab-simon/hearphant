@@ -4,7 +4,7 @@
 const { Gio } = imports.gi;
 
 const here = Gio.File.new_for_path(imports.system.programPath ?? '.').get_parent();
-imports.searchPath.unshift(here.get_parent().get_child('hearphant@hearphant.org').get_path());
+imports.searchPath.unshift(here.get_parent().get_child('hearphant@gab-simon.github.io').get_path());
 const States = imports.states;
 
 let failures = 0;
@@ -249,7 +249,7 @@ test('nível ao vivo: zona e tempo até a referência', () => {
 
 test('CSS sem margens/paddings negativos (estouram a altura no St)', () => {
     const css = imports.byteArray.toString(
-        here.get_parent().get_child('hearphant@hearphant.org').get_child('stylesheet.css').load_contents(null)[1]);
+        here.get_parent().get_child('hearphant@gab-simon.github.io').get_child('stylesheet.css').load_contents(null)[1]);
     const bad = css.split('\n').filter(l => /(margin|padding)[^:]*:[^;]*-\d/.test(l));
     eq(bad.length, 0, `linhas: ${bad.join(' | ')}`);
 });

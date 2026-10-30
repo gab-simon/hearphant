@@ -1,4 +1,4 @@
-/* Cliente do serviço org.hearphant.Service1. A extensão não calcula nada:
+/* Cliente do serviço io.github.gab_simon.HearPhant1. A extensão não calcula nada:
  * só observa o nome no barramento, lê o status e repassa sinais. */
 'use strict';
 
@@ -8,8 +8,8 @@ const ByteArray = imports.byteArray;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-var BUS_NAME = 'org.hearphant.Service1';
-var OBJECT_PATH = '/org/hearphant/Service1';
+var BUS_NAME = 'io.github.gab_simon.HearPhant1';
+var OBJECT_PATH = '/io/github/gab_simon/HearPhant1';
 
 // Intervalo mínimo entre atualizações de UI (seção 14.4: sem polling por quadro).
 const UPDATE_THROTTLE_MS = 250;

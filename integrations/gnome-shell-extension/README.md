@@ -2,12 +2,12 @@
 
 Indicador da Ellie no painel com popover de três telas, inspirado no mockup do projeto:
 principal (anel, tempo de escuta ou dose, volume, dispositivo, sinal ao vivo, proteção),
-semana (barras por dia, média, sinal médio, divisão por dispositivo) e configurações. **Só apresenta** o que o serviço `org.hearphant.Service1`
+semana (barras por dia, média, sinal médio, divisão por dispositivo) e configurações. **Só apresenta** o que o serviço `io.github.gab_simon.HearPhant1`
 publica via D-Bus; não calcula dose (seção 10.3 da documentação).
 
 - Alvo atual: **GNOME Shell 42** (Ubuntu 22.04). A API de Quick Settings só existe no
   GNOME 43+, por isso aqui é um `PanelMenu.Button`. GNOME 43/44 e 45+ (módulos ES) ainda não suportados.
-- Contrato D-Bus: [`dbus/org.hearphant.Service1.xml`](../../dbus/org.hearphant.Service1.xml).
+- Contrato D-Bus: [`dbus/io.github.gab_simon.HearPhant1.xml`](../../dbus/io.github.gab_simon.HearPhant1.xml).
 
 ## Salvaguardas na UI
 
@@ -28,7 +28,7 @@ publica via D-Bus; não calcula dose (seção 10.3 da documentação).
 ```sh
 make test       # testes da lógica de apresentação (gjs, fora do Shell)
 make install    # empacota e instala em ~/.local/share/gnome-shell/extensions
-gnome-extensions enable hearphant@hearphant.org
+gnome-extensions enable hearphant@gab-simon.github.io
 # X11: Alt+F2, digite r, Enter. Wayland: sair e entrar na sessão.
 ```
 

@@ -1,4 +1,4 @@
-//! hearphant-daemon: serviço de sessão `org.hearphant.Service1`.
+//! hearphant-daemon: serviço de sessão `io.github.gab_simon.HearPhant1`.
 //!
 //! Observa a saída padrão do PipeWire, mede tempo de escuta e nível do sinal
 //! digital e guarda agregados em SQLite. Com a análise do sinal ligada e um
@@ -29,8 +29,8 @@ use zbus::object_server::SignalContext;
 use zbus::zvariant::Value;
 use zbus::{fdo, interface};
 
-const BUS_NAME: &str = "org.hearphant.Service1";
-const OBJECT_PATH: &str = "/org/hearphant/Service1";
+const BUS_NAME: &str = "io.github.gab_simon.HearPhant1";
+const OBJECT_PATH: &str = "/io/github/gab_simon/HearPhant1";
 const API_VERSION: u32 = 3;
 const WINDOW_HOURS: u32 = 168;
 const WINDOW_MS: i64 = WINDOW_HOURS as i64 * 3_600_000;
@@ -504,7 +504,7 @@ struct Service {
     reconcile: Arc<Notify>,
 }
 
-#[interface(name = "org.hearphant.Service1")]
+#[interface(name = "io.github.gab_simon.HearPhant1")]
 impl Service {
     #[zbus(property)]
     fn api_version(&self) -> u32 {

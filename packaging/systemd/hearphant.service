@@ -6,7 +6,7 @@ Wants=pipewire.service
 
 [Service]
 Type=dbus
-BusName=org.hearphant.Service1
+BusName=io.github.gab_simon.HearPhant1
 ExecStart=%h/.local/bin/hearphant-daemon
 Restart=on-failure
 RestartSec=5
