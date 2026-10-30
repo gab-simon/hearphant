@@ -49,6 +49,10 @@ const SETTING_SIGNAL: &str = "signal_analysis";
 const SETTING_ALERT: &str = "alert_level";
 /// Rearme: o alerta volta a valer quando a dose cai esta margem abaixo.
 const ALERT_REARM_MARGIN: f64 = 10.0;
+/// Com perfil de estimativa, "há som" é decidido pelo nível no ouvido, não
+/// pelo nível digital do conteúdo. Baixo de propósito: com ±5 dB de
+/// incerteza, é melhor contar música baixinha do que chamá-la de silêncio.
+const AUDIBLE_DBA: f64 = live::FLOOR_DBA;
 /// Resolução publicada da dose: 0,0001 ponto percentual.
 const DOSE_SCALE: f64 = 10_000.0;
 /// Limiares de UX da seção 12.1 (decisões de produto, não marcos médicos).
@@ -315,6 +319,18 @@ impl Shared {
             .then(|| EstimateCtx { profile_id: profile.id.into(), uncertainty_db: profile.uncertainty_db })
     }
 
+    /// O quadro tem som perceptível? Com perfil, pelo nível estimado no
+    /// ouvido (o volume do sistema conta); sem perfil, pelo silêncio digital.
+    fn frame_audible(&self, frame: &LevelFrame) -> bool {
+        if !frame.is_audible() {
+            return false;
+        }
+        match self.resolution.as_ref().and_then(Resolution::profile) {
+            Some(_) => self.frame_laeq(frame).is_some_and(|l| l >= AUDIBLE_DBA),
+            None => true,
+        }
+    }
+
     /// Nível estimado de um quadro na saída atual.
     fn frame_laeq(&self, frame: &LevelFrame) -> Option<f64> {
         let profile = self.resolution.as_ref()?.profile()?;
@@ -549,7 +565,7 @@ impl Service {
                 true,
                 l.rms_dbfs().max(-120.0),
                 l.peak_dbfs().max(-120.0),
-                l.is_audible(),
+                shared.frame_audible(l),
                 shared.live.current(Instant::now()).unwrap_or(-1.0),
             ),
             None => (false, -120.0, -120.0, false, -1.0),
@@ -886,15 +902,16 @@ async fn run_capture(
             let mut s = shared.lock().unwrap();
             let before = s.tracker.active_now();
             let laeq = s.frame_laeq(&frame);
+            let audible = s.frame_audible(&frame);
             let closed =
-                s.tracker.signal_frame(frame.at, now_utc(), frame.duration, frame.mean_square, frame.is_audible(), laeq);
+                s.tracker.signal_frame(frame.at, now_utc(), frame.duration, frame.mean_square, audible, laeq);
             s.save(closed);
             s.last_level = Some(frame);
             let mut block = None;
             if s.resolution.as_ref().and_then(Resolution::profile).is_some() {
                 // Abaixo do limiar de silêncio conta como energia zero: ruído
                 // digital não é "nível no ouvido".
-                let energy = laeq.filter(|_| frame.is_audible()).map_or(0.0, |l| 10f64.powf(l / 10.0));
+                let energy = laeq.filter(|_| audible).map_or(0.0, |l| 10f64.powf(l / 10.0));
                 block = s.live.push(energy, frame.at);
             }
             let alert = block.and_then(|b| b.alert).map(loud_alert);
@@ -1024,6 +1041,46 @@ mod tests {
         assert_eq!(alert_at(&mut s, 60.0), None, "caiu: rearma");
         assert_eq!(alert_at(&mut s, 82.0).as_deref(), Some("warning"));
         assert_eq!(s.store.setting(SETTING_ALERT).unwrap().as_deref(), Some("80"));
+    }
+
+    fn frame_at(dbfs: f64) -> LevelFrame {
+        let ms = 10f64.powf(dbfs / 10.0);
+        LevelFrame { at: Instant::now(), duration: LEVEL_FRAME, mean_square: ms, mean_square_a: ms, peak: 0.0 }
+    }
+
+    fn with_output(s: &mut Shared, volume_cubic: f64) {
+        let out = OutputDevice {
+            node_id: 1,
+            stable_name: "alsa_output.usb-KTMicro_Chu2_DSP-00.analog-stereo".into(),
+            description: "Chu2 DSP Analog Stereo".into(),
+            kind: hearphant_audio::DeviceKind::Unknown,
+            kind_evidence: None,
+            bus: None,
+            state: "running".into(),
+            volume: Some(hearphant_audio::DigitalVolume {
+                percent: volume_cubic * 100.0,
+                linear_gain: volume_cubic.powi(3),
+                muted: false,
+            }),
+            streams: Vec::new(),
+            is_default: true,
+        };
+        s.resolution = Some(calibration::resolve(&out, KindOverride::Auto));
+        s.audio = Ok(AudioSnapshot { outputs: vec![out] });
+    }
+
+    #[test]
+    fn quiet_app_volume_still_counts_as_audible() {
+        // Spotify em ~1% de volume: a música chega a −70 dBFS no monitor.
+        let mut s = shared();
+        assert!(s.frame_audible(&frame_at(-70.0)), "sem perfil: acima do silêncio digital");
+        with_output(&mut s, 0.22);
+        // −70 − 39,5 (volume 22%) + 120,2 ≈ 10,7 dB(A): baixinho, mas conta.
+        assert!(s.frame_audible(&frame_at(-70.0)));
+        // −75 dBFS → ≈ 5,7 dB(A): abaixo do limiar.
+        assert!(!s.frame_audible(&frame_at(-75.0)));
+        // Ruído digital nunca conta.
+        assert!(!s.frame_audible(&frame_at(-95.0)));
     }
 
     #[test]

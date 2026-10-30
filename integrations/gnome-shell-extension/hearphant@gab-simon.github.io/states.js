@@ -510,7 +510,7 @@ function describeWeek(status, today = new Date()) {
         devices,
         coverage,
         sourceNote: s.activitySource === 'signal'
-            ? 'Tempo com áudio medido pelo nível do sinal (acima de −60 dBFS).'
+            ? 'Tempo com áudio medido pelo sinal: conta qualquer som audível, mesmo baixinho.'
             : 'Tempo aproximado pelos aplicativos com áudio aberto. Ative a análise do sinal para mais precisão.',
     };
 }

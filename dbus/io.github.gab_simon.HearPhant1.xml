@@ -34,7 +34,8 @@
     device_kind          s  headphone | speaker | unknown
     volume_percent       d  volume digital da saída (0..150). NÃO é dBA.
     muted                b
-    playing              b  há áudio agora: sinal acima de −60 dBFS (activity_source=signal)
+    playing              b  há áudio agora: com perfil, nível estimado ≥ 10 dB(A); sem perfil,
+                            sinal acima de −80 dBFS (activity_source=signal)
                             ou stream de aplicativo rodando (activity_source=stream)
     stream_active        b  há stream de aplicativo rodando na saída
     protection_mode      s  inform | ask | auto | basic_cap

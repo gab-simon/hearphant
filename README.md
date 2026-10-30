@@ -145,7 +145,8 @@ roda por vez: pare o daemon antes de usar o serviço simulado.
 - Tipo do dispositivo vem do `port.type` da rota. DACs USB com porta `analog` (ex.: Chu2 DSP)
   ficam `unknown`, pois não há como saber o que está conectado.
 - Saídas virtuais (EasyEffects etc.) não são resolvidas até o dispositivo físico.
-- Volume por aplicativo e ganhos fora do Linux (amplificador, controle no fone) não são vistos.
+- Ganhos fora do Linux (amplificador, controle no fone, equalizador do app da Moondrop) não são
+  vistos. O volume de cada aplicativo é visto: a análise usa o som já misturado, depois dele.
 - Testado só em Ubuntu 22.04, PipeWire 0.3.48, GNOME 42.9.
 
 ## Design

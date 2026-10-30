@@ -239,9 +239,9 @@ class WeekChart extends St.BoxLayout {
     }
 });
 
-/* Medidor horizontal de nível. Escala padrão: dBFS de −60 a 0; com
+/* Medidor horizontal de nível. Escala padrão: dBFS de −80 a 0; com
  * estimativa, dB(A) de 40 a 110 com marcas de referência. */
-const DBFS_SCALE = Object.freeze({ min: -60, max: 0, markers: [] });
+const DBFS_SCALE = Object.freeze({ min: -80, max: 0, markers: [] });
 
 var LevelMeter = GObject.registerClass(
 class LevelMeter extends St.DrawingArea {

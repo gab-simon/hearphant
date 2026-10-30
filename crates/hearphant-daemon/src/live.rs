@@ -8,8 +8,9 @@ use std::time::{Duration, Instant};
 
 /// Quadros por bloco (12 × 250 ms = 3 s).
 pub const BLOCK_FRAMES: usize = 12;
-/// Abaixo disso o nível não é exibido: não tem significado prático.
-pub const FLOOR_DBA: f64 = 20.0;
+/// Abaixo disso o nível não é exibido nem conta como som. Baixo de propósito:
+/// música baixinha num fone intra-auricular fica na casa de 10–30 dB(A).
+pub const FLOOR_DBA: f64 = 10.0;
 /// Zona vermelha da UI: a referência semanal adulta chega em ≤ 4 h.
 pub const LOUD_ON_DBA: f64 = 90.0;
 /// Sai do estado "alto" só abaixo disto (histerese).
@@ -165,6 +166,7 @@ mod tests {
         let mut t = Instant::now();
         assert_eq!(block(&mut m, &mut t, None).leq, None);
         assert_eq!(block(&mut m, &mut t, Some(5.0)).leq, None);
+        assert!(block(&mut m, &mut t, Some(15.0)).leq.is_some(), "baixinho, mas audível");
     }
 
     #[test]

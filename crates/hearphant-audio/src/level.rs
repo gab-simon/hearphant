@@ -15,9 +15,12 @@ use tokio::sync::mpsc;
 
 use super::die_with_parent;
 
-/// Abaixo disso o quadro conta como silêncio (RF-002). Decisão de produto:
-/// ruído de fundo de música e pausas ficam bem abaixo de −60 dBFS.
-pub const SILENCE_DBFS: f64 = -60.0;
+/// Abaixo disso o quadro conta como silêncio digital (RF-002) quando não há
+/// perfil para estimar o nível no ouvido. Fica perto do silêncio de fato
+/// (players pausados mandam zeros; dither fica em torno de −96 dBFS): o
+/// monitor vem depois do volume de cada aplicativo, então música com o app
+/// em 1% já chega a −60/−75 dBFS e ainda é audível.
+pub const SILENCE_DBFS: f64 = -80.0;
 
 const RATE: u32 = 48_000;
 const CHANNELS: u32 = 2;
@@ -272,7 +275,8 @@ mod tests {
     fn silence_threshold() {
         assert!(!frame(0.0).is_audible());
         assert_eq!(frame(0.0).rms_dbfs(), f64::NEG_INFINITY);
-        assert!(!frame(1e-7).is_audible()); // −70 dBFS
+        assert!(!frame(1e-9).is_audible()); // −90 dBFS
+        assert!(frame(1e-7).is_audible()); // −70 dBFS: app com volume baixo
         assert!(frame(1e-4).is_audible()); // −40 dBFS
     }
 }
