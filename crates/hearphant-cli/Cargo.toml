@@ -1,0 +1,18 @@
+[package]
+name = "hearphant-cli"
+description = "CLI de diagnóstico: dispositivos detectados e estado do serviço"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "hearphant"
+path = "src/main.rs"
+
+[dependencies]
+hearphant-audio.workspace = true
+hearphant-dose.workspace = true
+anyhow.workspace = true
+tokio.workspace = true
+zbus.workspace = true

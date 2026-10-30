@@ -1,0 +1,7 @@
+# Rust
+/target/
+
+# Extensão GNOME: pacote gerado por `make pack`
+/integrations/gnome-shell-extension/build/
+*.shell-extension.zip
+gschemas.compiled

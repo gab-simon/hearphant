@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="hearphant">
+  <schema id="org.gnome.shell.extensions.hearphant" path="/org/gnome/shell/extensions/hearphant/">
+    <key name="notifications" type="b">
+      <default>true</default>
+      <summary>Notificações não críticas</summary>
+      <description>Alertas informativos. Falhas de proteção e referência excedida sempre aparecem.</description>
+    </key>
+    <key name="animations" type="b">
+      <default>true</default>
+      <summary>Animações da Ellie</summary>
+      <description>Inclinação ao passar o mouse e transições do anel. Também respeita a configuração do sistema.</description>
+    </key>
+  </schema>
+</schemalist>

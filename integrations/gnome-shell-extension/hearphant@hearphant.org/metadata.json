@@ -1,0 +1,9 @@
+{
+  "uuid": "hearphant@hearphant.org",
+  "name": "HearPhant",
+  "description": "A Ellie acompanha o tempo de escuta e, com perfil calibrado, a exposição sonora informada pelo serviço HearPhant. Não é dispositivo médico; sem calibração, não exibe dose.",
+  "shell-version": ["42"],
+  "settings-schema": "org.gnome.shell.extensions.hearphant",
+  "url": "",
+  "version": 2
+}

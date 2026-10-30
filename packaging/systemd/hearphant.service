@@ -1,0 +1,17 @@
+[Unit]
+Description=HearPhant — acompanhamento de exposição sonora (serviço de sessão)
+Documentation=https://github.com/gab-simon/hearphant
+After=pipewire.service wireplumber.service
+Wants=pipewire.service
+
+[Service]
+Type=dbus
+BusName=org.hearphant.Service1
+ExecStart=%h/.local/bin/hearphant-daemon
+Restart=on-failure
+RestartSec=5
+# Sem privilégios extras: só precisa do barramento de sessão e do PipeWire.
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=default.target

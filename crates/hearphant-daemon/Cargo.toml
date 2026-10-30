@@ -1,0 +1,17 @@
+[package]
+name = "hearphant-daemon"
+description = "Serviço de sessão org.hearphant.Service1"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+hearphant-audio.workspace = true
+hearphant-storage.workspace = true
+hearphant-calibration.workspace = true
+hearphant-dose.workspace = true
+chrono.workspace = true
+anyhow.workspace = true
+tokio.workspace = true
+zbus.workspace = true

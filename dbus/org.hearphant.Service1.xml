@@ -1,0 +1,117 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!--
+  Contrato D-Bus do HearPhant (seção 11.3 da especificação).
+  Nome no barramento de sessão: org.hearphant.Service1
+  Caminho do objeto:            /org/hearphant/Service1
+  Versão: 3
+
+  Status (a{sv}) — chaves:
+    api_version          u  versão deste contrato (3)
+    mascot_state         s  UNVERIFIED | IDLE | NORMAL | NOTICE | WARNING | EXCEEDED | PROTECTING | ERROR
+    measurement_status   s  CALIBRATED | ESTIMATED | UNVERIFIED | UNAVAILABLE
+    coverage_status      s  observed | missing | unverified | invalid
+    coverage_fraction    d  0..1, fração da janela com medição acústica (só com dose)
+    window_hours         u  tamanho da janela móvel (168)
+    reference_mode       s  adult (80 dBA/40 h, 1,6 Pa²·h) | conservative (75 dBA/40 h, 0,51 Pa²·h)
+    dose_percent         d  % da referência semanal adulta. AUSENTE sem energia acústica
+                            calibrada ou estimada na janela. Só com CALIBRATED ou ESTIMATED.
+    dose_low_percent     d  limite inferior da faixa provável (ESTIMATED)
+    dose_high_percent    d  limite superior da faixa provável (ESTIMATED)
+    dose_uncertainty_db  d  maior incerteza (± dB) entre os trechos estimados da janela
+
+    Estimativa automática (seção 9.3, B; não é calibração):
+    estimate_available   b  a saída atual tem perfil de estimativa
+    estimate_profile     s  nome do perfil (ex.: "Moondrop Chu II DSP", "Fone genérico (EN 50332)")
+    estimate_basis       s  de onde vêm os números do perfil
+    estimate_uncertainty_db d  ± dB do perfil atual
+    estimate_reason      s  por que não há estimativa agora (caixa de som, análise desligada)
+    kind_presumed        b  o tipo "fone" foi presumido (porta sem evidência)
+    device_kind_override s  auto | headphone | speaker (escolha do usuário para esta saída)
+    loud_now             b  nível estimado agora ≥ 90 dB(A) por 2 blocos de 3 s seguidos
+                            (sai abaixo de 85 dB(A))
+    device_name          s  nome exibível da saída ativa
+    device_kind          s  headphone | speaker | unknown
+    volume_percent       d  volume digital da saída (0..150). NÃO é dBA.
+    muted                b
+    playing              b  há áudio agora: sinal acima de −60 dBFS (activity_source=signal)
+                            ou stream de aplicativo rodando (activity_source=stream)
+    stream_active        b  há stream de aplicativo rodando na saída
+    protection_mode      s  inform | ask | auto | basic_cap
+    is_demo              b  true quando os dados são fictícios (mock/demonstração)
+
+    Atividade digital (não é exposição acústica):
+    signal_analysis      b  análise do nível do sinal autorizada pelo usuário
+    capture_status       s  off | waiting (nada tocando) | capturing | error
+    activity_source      s  signal | stream — como "com áudio" é determinado agora
+    listening_ms         t  tempo com áudio na janela
+    signal_listening_ms  t  parte de listening_ms medida pelo sinal (o resto é aproximação)
+    monitored_ms         t  tempo em que o serviço observava, na janela (cobertura)
+    monitored_fraction   d  monitored_ms / janela
+    monitoring_since     x  início do primeiro segmento na janela (ms UTC), se houver
+    signal_mean_dbfs     d  RMS médio do conteúdo nos trechos com áudio. Antes do volume
+                            da saída; não é o nível no ouvido.
+    daily_listening_ms   at 7 valores, do dia local mais antigo até hoje
+    device_listening     a(sst) (nome, tipo, ms com áudio) por saída, decrescente
+
+  Alert (a{sv}): alert_id s, severity s (notice|warning|exceeded|loud), title s, body s,
+    laeq_estimate d (só em "loud"). "loud" tem intervalo mínimo de 10 min entre avisos.
+  ProtectionResult (a{sv}): device_name s, requested_gain d, actual_gain d,
+    verified b (o ganho foi lido de volta e confere), message s
+-->
+<node>
+  <interface name="org.hearphant.Service1">
+    <property name="ApiVersion" type="u" access="read"/>
+
+    <method name="GetStatus">
+      <arg name="status" type="a{sv}" direction="out"/>
+    </method>
+    <method name="GetExposure">
+      <arg name="window_hours" type="u" direction="in"/>
+      <arg name="exposure" type="a{sv}" direction="out"/>
+    </method>
+    <!-- Nível do sinal agora; consultar só enquanto um medidor estiver visível. -->
+    <method name="GetLevel">
+      <arg name="capturing" type="b" direction="out"/>
+      <arg name="rms_dbfs" type="d" direction="out"/>
+      <arg name="peak_dbfs" type="d" direction="out"/>
+      <arg name="audible" type="b" direction="out"/>
+      <!-- dB(A) estimado no ouvido, Leq do último bloco de 3 s; −1 sem estimativa. -->
+      <arg name="laeq_estimate" type="d" direction="out"/>
+    </method>
+    <method name="ListDevices">
+      <arg name="devices" type="aa{sv}" direction="out"/>
+    </method>
+    <method name="SetProtectionMode">
+      <arg name="mode" type="s" direction="in"/>
+      <arg name="accepted" type="b" direction="out"/>
+      <arg name="reason" type="s" direction="out"/>
+    </method>
+    <method name="SetSignalAnalysis">
+      <arg name="enabled" type="b" direction="in"/>
+      <arg name="accepted" type="b" direction="out"/>
+      <arg name="reason" type="s" direction="out"/>
+    </method>
+    <!-- Tipo da saída atual: auto | headphone | speaker. -->
+    <method name="SetDeviceKind">
+      <arg name="kind" type="s" direction="in"/>
+      <arg name="accepted" type="b" direction="out"/>
+      <arg name="reason" type="s" direction="out"/>
+    </method>
+    <method name="DeleteHistory">
+      <arg name="from_utc_ms" type="x" direction="in"/>
+      <arg name="to_utc_ms" type="x" direction="in"/>
+      <arg name="deleted" type="t" direction="out"/>
+    </method>
+
+    <signal name="StatusChanged">
+      <arg name="status" type="a{sv}"/>
+    </signal>
+    <signal name="AlertRaised">
+      <arg name="alert" type="a{sv}"/>
+    </signal>
+    <signal name="ProtectionApplied">
+      <arg name="result" type="a{sv}"/>
+    </signal>
+  </interface>
+</node>

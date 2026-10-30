@@ -1,0 +1,190 @@
+/* HearPhant — popover em cartões, inspirado no mockup do projeto.
+ * Cores derivadas da seção 5.3, escurecidas para contraste ≥ 3:1 em fundo
+ * claro e escuro. Todo estado também tem texto; cor nunca é o único sinal.
+ * Fundos usam cinza translúcido para funcionar em temas claros e escuros. */
+
+/* ---------- estrutura ---------- */
+
+.hearphant-menu { min-width: 380px; }
+.hearphant-menu-item { padding: 6px 12px; spacing: 0; }
+.hearphant-menu-item:hover,
+.hearphant-menu-item:active,
+.hearphant-menu-item:focus { background-color: transparent; }
+
+.hearphant-page { width: 360px; spacing: 10px; }
+
+.hearphant-card {
+  background-color: rgba(128, 128, 128, 0.10);
+  border: 1px solid rgba(128, 128, 128, 0.14);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+/* ---------- cabeçalho ---------- */
+
+.hearphant-header { spacing: 10px; }
+.hearphant-logo {
+  width: 38px; height: 38px;
+  border-radius: 12px;
+  background-color: rgba(76, 139, 214, 0.16);
+  color: #4C8BD6;
+}
+.hearphant-title { font-weight: bold; font-size: 1.15em; }
+.hearphant-subtitle { font-size: 0.85em; color: #7d828a; }
+
+.hearphant-icon-button {
+  border-radius: 99px;
+  padding: 8px;
+  background-color: rgba(128, 128, 128, 0.12);
+}
+.hearphant-icon-button:hover { background-color: rgba(128, 128, 128, 0.22); }
+.hearphant-icon-button:focus { box-shadow: inset 0 0 0 2px #4C8BD6; }
+
+.hearphant-demo-badge {
+  font-size: 0.75em;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 99px;
+  border: 1px solid #C98A1E;
+  color: #C98A1E;
+}
+
+/* ---------- herói ---------- */
+
+.hearphant-ellie-ring { width: 176px; height: 176px; margin-top: 4px; }
+.hearphant-ellie-halo {
+  width: 116px; height: 116px;
+  border-radius: 58px;
+  background-color: rgba(128, 128, 128, 0.08);
+}
+.hearphant-ellie-large { icon-size: 72px; }
+.hearphant-ellie-badge {
+  font-weight: bold;
+  font-size: 1em;
+  padding: 1px 7px;
+  border-radius: 99px;
+  margin: 22px 26px 0 0;
+  color: #ffffff;
+  background-color: #8A8F98;
+}
+
+.hearphant-hero { font-size: 2.1em; font-weight: 800; text-align: center; }
+.hearphant-hero-caption { font-size: 0.95em; text-align: center; color: #7d828a; }
+.hearphant-mood { font-weight: bold; text-align: center; }
+.hearphant-chip {
+  font-size: 0.8em;
+  padding: 3px 10px;
+  border-radius: 99px;
+  background-color: rgba(128, 128, 128, 0.14);
+}
+.hearphant-chip.action { color: #4C8BD6; font-weight: bold; }
+.hearphant-chip.action:hover { background-color: rgba(76, 139, 214, 0.18); }
+.hearphant-chip:focus { box-shadow: inset 0 0 0 2px #4C8BD6; }
+
+/* ---------- blocos ---------- */
+
+.hearphant-tiles { spacing: 10px; }
+.hearphant-tile { spacing: 10px; }
+.hearphant-tile-icon { color: #4C8BD6; margin-top: 2px; }
+.hearphant-tile-caption { font-size: 0.8em; color: #7d828a; }
+.hearphant-tile-value { font-size: 1.25em; font-weight: bold; }
+.hearphant-tile-note { font-size: 0.75em; color: #7d828a; }
+
+.hearphant-signal { spacing: 6px; }
+.hearphant-signal-value { font-weight: bold; font-size: 0.9em; }
+.hearphant-level-meter { height: 12px; color: #4C8BD6; }
+.hearphant-level-meter.zone-ok { color: #4C8BD6; }
+.hearphant-level-meter.zone-high { color: #C98A1E; }
+.hearphant-level-meter.zone-very-high { color: #C9545A; }
+/* Nunca usar margem negativa no St: estoura a altura do menu. */
+
+/* ---------- linhas e listas ---------- */
+
+.hearphant-row { border-radius: 10px; padding: 6px 6px; }
+.hearphant-row:hover { background-color: rgba(128, 128, 128, 0.12); }
+.hearphant-row:focus { box-shadow: inset 0 0 0 2px #4C8BD6; }
+.hearphant-row:insensitive { color: #9a9ea5; }
+.hearphant-card.hearphant-row { padding: 8px 10px; }
+.hearphant-row.danger .hearphant-row-title,
+.hearphant-row.danger .hearphant-row-icon { color: #C9545A; }
+
+.hearphant-row-content { spacing: 12px; }
+.hearphant-row-icon {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background-color: rgba(128, 128, 128, 0.12);
+}
+.hearphant-row-title { font-weight: bold; }
+.hearphant-row-subtitle { font-size: 0.82em; color: #7d828a; }
+.hearphant-chevron { color: #7d828a; }
+.hearphant-check { color: #4C8BD6; }
+
+.hearphant-list { padding: 4px 6px; spacing: 2px; }
+.hearphant-section { spacing: 6px; }
+.hearphant-section-title { font-weight: bold; margin-top: 4px; }
+.hearphant-section-note { font-size: 0.78em; color: #7d828a; padding: 0 4px; }
+.hearphant-empty { padding: 8px; }
+
+.hearphant-device-row { spacing: 12px; padding: 8px 6px; }
+.hearphant-share-bar { height: 6px; margin-top: 6px; color: #4C8BD6; }
+
+.hearphant-primary-button {
+  border-radius: 12px;
+  padding: 10px;
+  font-weight: bold;
+  background-color: rgba(128, 128, 128, 0.16);
+}
+.hearphant-primary-button:hover { background-color: rgba(128, 128, 128, 0.26); }
+.hearphant-primary-button:focus { box-shadow: inset 0 0 0 2px #4C8BD6; }
+
+.hearphant-footnote { font-size: 0.78em; color: #7d828a; text-align: center; }
+
+/* ---------- telas secundárias ---------- */
+
+.hearphant-page-header { spacing: 10px; }
+.hearphant-page-title { font-weight: bold; font-size: 1.1em; }
+
+.hearphant-chart-card { padding: 12px 10px 8px 10px; }
+.hearphant-week-area { height: 120px; color: #4C8BD6; margin: 4px 0; }
+.hearphant-week-value { font-size: 0.72em; text-align: center; color: #7d828a; }
+.hearphant-week-label { font-size: 0.8em; text-align: center; color: #7d828a; }
+.hearphant-week-value.today,
+.hearphant-week-label.today { font-weight: bold; color: #4C8BD6; }
+
+.hearphant-settings-scroll { max-height: 470px; }
+.hearphant-settings-body { spacing: 12px; padding-right: 4px; }
+
+/* ---------- tooltip do painel ---------- */
+
+.hearphant-tooltip {
+  background-color: rgba(30, 30, 34, 0.94);
+  color: #f2f2f2;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 0.9em;
+  max-width: 280px;
+}
+
+/* ---------- estados ---------- */
+/* UNVERIFIED/IDLE/UNAVAILABLE ficam neutros: verde nunca sem dose. */
+.hearphant-ellie-ring.hearphant-state-unavailable,
+.hearphant-ellie-ring.hearphant-state-unverified,
+.hearphant-ellie-ring.hearphant-state-idle { color: #8A8F98; }
+.hearphant-ellie-ring.hearphant-state-normal { color: #2E9E84; }
+.hearphant-ellie-ring.hearphant-state-notice { color: #4C8BD6; }
+.hearphant-ellie-ring.hearphant-state-warning { color: #C98A1E; }
+.hearphant-ellie-ring.hearphant-state-exceeded { color: #C9545A; }
+.hearphant-ellie-ring.hearphant-state-protecting { color: #4C8BD6; }
+.hearphant-ellie-ring.hearphant-state-error { color: #C96A45; }
+
+/* Volume alto agora: a Ellie fica vermelha no painel e no popover. */
+.hearphant-ellie-ring.hearphant-loud { color: #C9545A; }
+
+/* Painel: cor do tema, exceto quando há algo a fazer. */
+.hearphant-panel-icon.hearphant-state-warning { color: #E0AD4E; }
+.hearphant-panel-icon.hearphant-state-exceeded { color: #DD835F; }
+.hearphant-panel-icon.hearphant-state-protecting { color: #79A8DE; }
+.hearphant-panel-icon.hearphant-state-error { color: #DD835F; }
+
+/* Por último: volume alto prevalece sobre a cor de estado no painel. */
+.hearphant-panel-icon.hearphant-loud { color: #E5484D; }

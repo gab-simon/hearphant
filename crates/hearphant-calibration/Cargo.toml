@@ -1,0 +1,10 @@
+[package]
+name = "hearphant-calibration"
+description = "Perfis de estimativa acústica por dispositivo (seção 9: calibração e níveis de confiança)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+hearphant-audio.workspace = true
