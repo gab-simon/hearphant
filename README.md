@@ -15,6 +15,25 @@ O HearPhant fica de olho no áudio do computador e responde a duas perguntas:
   recomendado pela OMS para adultos (80 dB(A) por 40 h na semana), mostrando quanto desse limite
   você já usou.
 
+### O limite da OMS
+
+O que conta é a energia sonora total da semana, não só o volume: som mais alto gasta o limite
+mais rápido. A cada 3 dB a mais, o tempo cai pela metade.
+
+| Nível | Tempo até atingir 100% do limite semanal (adulto) |
+|---|---|
+| 75 dB(A) | ~126 h |
+| 80 dB(A) | 40 h |
+| 85 dB(A) | ~12,6 h |
+| 90 dB(A) | 4 h |
+| 95 dB(A) | ~1,3 h |
+| 100 dB(A) | 24 min |
+
+Para crianças ou pessoas mais sensíveis, a OMS indica um limite mais conservador: 75 dB(A) por
+40 h na semana. São referências para reduzir risco, não uma fronteira entre "seguro" e
+"perigoso", porque a sensibilidade varia de pessoa para pessoa (fonte: norma OMS/UIT de escuta
+segura, ITU-T H.870).
+
 Tudo roda no seu computador: nenhum áudio é gravado ou enviado. Como o computador não tem como
 medir o som dentro do ouvido, os números são **estimativas**, sempre mostradas com uma faixa
 de incerteza. A ideia é ajudar a criar o hábito de baixar o volume, não dar um diagnóstico.
